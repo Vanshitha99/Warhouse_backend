@@ -1,0 +1,51 @@
+# =======================================================================
+# Render Blueprint (render.yaml)
+# Place this file at the ROOT of your backend GitHub repo:
+#   Warhouse_backend (https://github.com/Vanshitha99/Warhouse_backend)
+#
+# It defines the Spring Boot backend Web Service.
+# The frontend is deployed separately as a Render Static Site.
+# =======================================================================
+
+services:
+  # -----------------------------------------------------------------------
+  # Backend: Spring Boot Web Service (Docker)
+  # -----------------------------------------------------------------------
+  - type: web
+    name: tgswc-warehouse-backend
+    runtime: docker
+    region: singapore          # Closest to India; change to oregon if Aiven DB is in US
+    plan: free                 # Change to starter ($7/mo) for always-on
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+
+    envVars:
+      # ---- Spring Profile ----
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # ---- Database (external Aiven / TiDB Cloud MySQL) ----
+      - key: DB_HOST
+        sync: false            # Marked secret — enter value in Render dashboard
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        value: tgswc_warehouse
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL_MODE
+        value: REQUIRED
+
+      # ---- Hibernate ----
+      - key: JPA_DDL_AUTO
+        value: update          # Change to 'validate' after first successful deploy
+
+      # ---- CORS: set to your deployed Render Static Site URL ----
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false            # e.g. https://tgswc-warehouse-frontend.onrender.com
+
+      # ---- JWT Secret (must be ≥ 256-bit / 32+ chars) ----
+      - key: JWT_SECRET
+        sync: false            # Generate with: openssl rand -base64 48

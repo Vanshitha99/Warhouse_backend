@@ -38,3 +38,7 @@ build/
 *.env
 application-local.properties
 
+### Do NOT commit real secrets ###
+# application-prod.properties is safe to commit (no real values, only ${VAR} refs)
+# Never commit .env files containing real passwords or API keys
+

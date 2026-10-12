@@ -1,0 +1,36 @@
+# Maven build output
+target/
+
+# Maven wrapper JAR (downloaded at build time)
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+.factorypath
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (never commit secrets)
+.env
+.env.*
+*.env
+application-local.properties
+
+# Log files
+*.log
+logs/
+
+# Git
+.git/
+.gitignore

@@ -49,3 +49,8 @@ services:
       # ---- JWT Secret (must be ≥ 256-bit / 32+ chars) ----
       - key: JWT_SECRET
         sync: false            # Generate with: openssl rand -base64 48
+
+      # ---- JWT Expiration (optional, default 24 hours = 86400000 ms) ----
+      - key: JWT_EXPIRATION
+        value: 86400000
+

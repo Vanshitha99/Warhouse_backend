@@ -17,14 +17,24 @@ public class JwtService {
     @Value("${jwt.secret:TelanganaWarehouseManagementSystemSecretKey2026}")
     private String secret;
 
-    private SecretKey key;
+    @Value("${jwt.expiration:86400000}")
+    private long expirationTime;
 
-    private final long expirationTime =
-            1000 * 60 * 60; // 1 hour
+    private SecretKey key;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalArgumentException("JWT secret is not configured. Please set jwt.secret or the JWT_SECRET environment variable.");
+        }
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException(
+                    "JWT secret is too short (" + keyBytes.length + " bytes / " + (keyBytes.length * 8)
+                            + " bits). JJWT requires at least 256 bits (32 bytes / 32 characters). Generate one using: openssl rand -base64 48"
+            );
+        }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(String username, String role) {
